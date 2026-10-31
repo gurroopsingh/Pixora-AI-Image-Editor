@@ -19,27 +19,27 @@ class Config:
 
     # Google Gemini
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
-    GEMINI_IMAGE_MODEL = os.getenv("GEMINI_IMAGE_MODEL", "imagen-3.0-capability-001").strip()
-    GEMINI_VISION_MODEL = os.getenv("GEMINI_VISION_MODEL", "gemini-2.5-flash").strip()
+    GEMINI_IMAGE_MODEL = os.getenv("GEMINI_IMAGE_MODEL", "gemini-nano-banana-2.1").strip()
+    GEMINI_VISION_MODEL = os.getenv("GEMINI_VISION_MODEL", "gemini-3.5-flash-lite").strip()
 
     # Fallback model codenames
     GEMINI_IMAGE_MODEL_PRIORITY = [
         "gemini-nano-banana-2.1",
+        "gemini-3.1-flash-image",
         "imagen-3.0-capability-001",
-        "imagen-3.0-generate-002",
-        "gemini-2.0-flash-exp",
     ]
 
     # OpenAI
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
-    OPENAI_IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL", "dall-e-2").strip()
+    OPENAI_IMAGE_MODEL = os.getenv("OPENAI_IMAGE_MODEL", "gpt-image-2.5-sunburst").strip()
     OPENAI_VISION_MODEL = os.getenv("OPENAI_VISION_MODEL", "gpt-4o-mini").strip()
     OPENAI_EMBEDDING_MODEL = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small").strip()
 
     OPENAI_IMAGE_MODEL_PRIORITY = [
         "gpt-image-2.5-sunburst",
+        "gpt-image-2",
+        "gpt-image-1.5",
         "dall-e-2",
-        "dall-e-3",
     ]
 
     # Storage paths
