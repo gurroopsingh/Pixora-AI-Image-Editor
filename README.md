@@ -48,12 +48,13 @@ Traditional image editing software (Photoshop, GIMP) requires steep learning cur
 
 | Layer | Technologies |
 |---|---|
-| **Frontend** | Python Streamlit 1.57, Custom CSS Design System |
+| **Frontend** | Python Streamlit 1.57, Custom CSS Dark SaaS Design System |
 | **Backend & Core** | Python 3.10+, Pillow 10.4+, Python-Dotenv |
-| **Primary AI Engine** | Google Gemini (`google-genai` SDK), Imagen 3.0, Gemini 2.5/1.5 Flash Vision |
-| **Secondary AI Engine**| OpenAI Python SDK, GPT-4o Vision, DALL-E / Images Edit API, text-embedding-3-small |
-| **Database & Search**| SQLite3 with Foreign Keys, Performance Indexes, and FTS Full-Text Search |
-| **Testing** | Pytest (21 automated unit and integration tests) |
+| **Vector Database & Embeddings** | ChromaDB (`database/chroma_db`, cosine space), 384-dim semantic embedding engine |
+| **Primary AI Engine** | Google Gemini (`google-genai` SDK), Gemini 3.5 Flash Lite Vision, Gemini Nano Banana 2.1 |
+| **Secondary AI Engine**| OpenAI Python SDK, GPT-4o Vision, GPT Image 2.5 Sunburst |
+| **Database & Version History**| SQLite3 with Foreign Keys, Cascades, Indexes, and Full Non-destructive Rollbacks |
+| **Testing** | Pytest (33 automated unit, mock, and integration tests across 7 test suites) |
 
 ---
 
@@ -75,6 +76,7 @@ flowchart TD
         P3 --> Editor[modules/image_editor.py]
         P2 & P3 --> Analyzer[modules/image_analyzer.py]
         P2 --> Search[modules/image_search.py]
+        Search --> VectorStore[modules/vector_store.py]
         P3 & P4 --> VerMgr[modules/version_manager.py]
         Editor --> Templates[modules/prompt_templates.py]
         Editor & Analyzer --> Providers[modules/providers.py]
@@ -87,7 +89,8 @@ flowchart TD
     end
 
     subgraph Storage_Layer [Storage & Persistence]
-        Editor & VerMgr --> DB[(SQLite: database/pixora.db)]
+        Editor & VerMgr & Search --> DB[(SQLite: database/pixora.db)]
+        VectorStore --> Chroma[(ChromaDB: database/chroma_db)]
         Editor & P1 --> DiskStore[Local Filesystem: storage/]
         DiskStore --> Orig[storage/originals/]
         DiskStore --> Edit[storage/edited/]
@@ -120,6 +123,7 @@ PIXORA AI/
 │   ├── image_analyzer.py       # Vision API captioning & scene understanding
 │   ├── image_editor.py         # AI image-to-image execution coordinator
 │   ├── image_search.py         # Semantic vector & keyword hybrid search
+│   ├── vector_store.py         # Persistent ChromaDB vector database manager
 │   ├── version_manager.py      # Non-destructive versioning & rollback logic
 │   ├── ui_components.py        # Reusable Streamlit UI components & layout
 │   └── utilities.py            # Formatting, Base64, and vector math helpers
@@ -140,15 +144,19 @@ PIXORA AI/
 │   └── thumbnails/             # High-performance WEBP thumbnails
 │
 ├── database/
-│   └── pixora.db               # SQLite database file
+│   ├── pixora.db               # SQLite database file
+│   └── chroma_db/              # Persistent ChromaDB vector store
 │
 └── tests/                      # Automated test suite
     ├── test_database.py        # DB schema, cascades, and version numbering
     ├── test_version_manager.py # Chronological history and revert integrity
+    ├── test_audit_version_workflow.py # Original -> v2 -> v3 -> v4 -> Revert audit
     ├── test_prompt_templates.py# Preset formatting & prompt validation
     ├── test_storage.py         # Upload validation, format handling, thumbnails
     ├── test_validation.py      # Missing credentials & mock provider workflows
-    └── test_search.py          # Natural language search & fallback ranking
+    ├── test_search.py          # Vector similarity ranking, semantic search
+    ├── test_ui_pages.py        # Streamlit AppTest smoke tests across all 6 pages
+    └── test_live_api.py        # Live provider validation (skips cleanly on quota limits)
 ```
 
 ---
