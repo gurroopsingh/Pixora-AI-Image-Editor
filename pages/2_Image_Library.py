@@ -134,7 +134,14 @@ else:
                         st.image(str(img["original_path"]), use_container_width=True)
 
                     # Card info
-                    st.markdown(f"**{img['original_filename']}**")
+                    sim_score = img.get("similarity_score")
+                    if sim_score is not None:
+                        st.markdown(
+                            f"**{img['original_filename']}** <span style='font-size:0.75rem; background:rgba(99,102,241,0.2); color:#A5B4FC; padding:2px 8px; border-radius:10px; font-weight:600;'>{sim_score*100:.1f}% Match</span>",
+                            unsafe_allow_html=True,
+                        )
+                    else:
+                        st.markdown(f"**{img['original_filename']}**")
 
                     # AI Caption snippet
                     caption = img.get("caption") or "No AI caption generated yet."

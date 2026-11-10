@@ -152,6 +152,17 @@ def save_uploaded_image(
         db_path=db_path,
     )
 
+    # Automatically index image in ChromaDB persistent vector database
+    try:
+        from modules.vector_store import index_image_vector
+        index_image_vector(
+            image_id=image_id,
+            text_content=clean_name,
+            metadata={"filename": clean_name, "mime_type": mime_type},
+        )
+    except Exception:
+        pass
+
     return img_data
 
 

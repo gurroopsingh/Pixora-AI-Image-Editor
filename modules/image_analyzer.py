@@ -54,6 +54,17 @@ def analyze_image_caption(
         caption = active_provider.analyze_image(target_path)
         if caption:
             update_image_caption(image_id, caption, db_path=db_path)
+            # Update vector embedding in ChromaDB persistent vector database
+            try:
+                from modules.vector_store import index_image_vector
+                orig_name = img_data.get("original_filename", "")
+                index_image_vector(
+                    image_id=image_id,
+                    text_content=f"{orig_name}. {caption}",
+                    metadata={"filename": orig_name, "has_caption": True},
+                )
+            except Exception:
+                pass
             return True, caption, None
         else:
             return False, "", "Vision provider returned an empty caption response."

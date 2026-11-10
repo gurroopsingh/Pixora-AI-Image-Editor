@@ -316,6 +316,13 @@ def delete_image(image_id: str, db_path: Optional[Path] = None) -> List[Path]:
         except sqlite3.OperationalError:
             pass
 
+        # Delete vector embedding from ChromaDB persistent vector database
+        try:
+            from modules.vector_store import delete_image_vector
+            delete_image_vector(image_id)
+        except Exception:
+            pass
+
         conn.commit()
 
     return files_to_delete

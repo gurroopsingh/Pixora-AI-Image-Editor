@@ -117,7 +117,7 @@ with tab_provider:
                         from google import genai
                         client = genai.Client(api_key=gemini_key.strip())
                         resp = client.models.generate_content(
-                            model=Config.GEMINI_VISION_MODEL or "gemini-2.5-flash",
+                            model=Config.GEMINI_VISION_MODEL or "gemini-3.5-flash-lite",
                             contents="Respond with 'PIXORA_OK' to verify connectivity.",
                         )
                         if resp and resp.text:

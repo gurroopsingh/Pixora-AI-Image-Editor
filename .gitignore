@@ -12,6 +12,10 @@ __pycache__/
 # Local Storage & Database
 database/*.db
 database/*.db-journal
+database/chroma_db/*
+!database/chroma_db/.gitkeep
+database/chroma_db/*/
+database/chroma_test/
 storage/originals/*
 !storage/originals/.gitkeep
 storage/edited/*

@@ -23,6 +23,14 @@ def init_session_state():
     """Ensure session state variables are properly initialized."""
     init_db()
 
+    if "vector_store_synced" not in st.session_state:
+        try:
+            from modules.vector_store import sync_all_existing_images_to_vector_store
+            sync_all_existing_images_to_vector_store()
+            st.session_state["vector_store_synced"] = True
+        except Exception:
+            pass
+
     if "active_image_id" not in st.session_state:
         st.session_state["active_image_id"] = None
 
